@@ -37,23 +37,43 @@ let text = document.getElementById("input").value;
 if(!text) return alert("Enter text");
 document.getElementById("result").innerText = "Processing...";
 
-// 讯飞星火接口 + 完整API Key
-const res = await fetch("https://spark-api-open.xf-yun.com/v1/chat/completions", {
-method:"POST",
-headers:{
-    "Content-Type":"application/json",
-    "Authorization":"Bearer eJJYLePyFWlRTgPJVOHB:qnWwuAeuFHtcoDjLXbTj"
-},
-body:JSON.stringify({
-model: "gpt-3.5-turbo",
-messages: [{role:"user",content:"Paraphrase this text: "+text}]
-})
-});
+try {
+  const res = await fetch("https://spark-api-open.xf-yun.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer eJJYLePyFWlRTgPJVOHB:qnWwuAeuFHtcoDjLXbTj"
+    },
+    body: JSON.stringify({
+      "model": "general",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Paraphrase this text naturally, keep the original meaning: " + text
+        }
+      ],
+      "temperature": 0.7,
+      "max_tokens": 2000
+    })
+  });
 
-const data = await res.json();
-let out = data.choices?.[0]?.message?.content || "Error";
-document.getElementById("result").innerText = out;
-count++;
+  const data = await res.json();
+  console.log("返回结果：", data);
+  
+  let out = "";
+  if (data.choices && data.choices[0] && data.choices[0].message) {
+    out = data.choices[0].message.content;
+  } else if (data.payload && data.payload.choices && data.payload.choices.text) {
+    out = data.payload.choices.text[0].content;
+  } else {
+    out = "API Error: " + JSON.stringify(data);
+  }
+
+  document.getElementById("result").innerText = out;
+  count++;
+} catch (err) {
+  document.getElementById("result").innerText = "Request failed: " + err.toString();
+}
 }
 </script>
 </body>
