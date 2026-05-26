@@ -28,7 +28,7 @@ button{background:#007bff;color:white;border:none;padding:12px
 <div class="result" id="result"></div>
 </div>
 <div class="tg">
-Unlimited use & API Key→Telegram: <a href=" " target="_blank">@sjjsnejje</a >
+Unlimited use & API Key→Telegram: <a href=" " target="_blank">@你的TG用户名</a >
 </div>
 <script>
 let count = 0;
@@ -41,10 +41,14 @@ return;
 let text = document.getElementById("input").value;
 if(!text) return alert("Enter text");
  document.getElementById("result").innerText = "Processing...";
-https://github.com/chenzhengtong3-spec/ai-rewriter-free.git
-const res = await fetch("https://github.com/chenzhengtong3-spec/ai-rewriter-free.git", {
+//讯飞星火兼容接口
+const res = await fetch("https://spark-api-open.xf-yun.com/v1/chat/completions", {
 method:"POST",
 headers:{"Content-Type":"application/json"},
+ headers:{
+    "Content-Type":"application/json",
+    "Authorization":"Bearer eJJYLePyFWlRTgPJVOHB:qnWwuAeuFHtcoDjLXbTj"
+},
 body:JSON.stringify({
 model: "gpt-3.5-turbo",
 messages: [{role:"user",content:"Paraphrase this text: "+text}]
@@ -57,4 +61,4 @@ count++;
 }
 </script>
 </body>
-</html> 
+</html>
